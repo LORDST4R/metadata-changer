@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Metadata Changer Pro | C2PA Killer</title>
+  <meta name="description" content="Deep clean images, remove C2PA & AI signatures, inject unique realistic metadata. 100% private, runs in your browser." />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-top: 12px;
+    }
+
+    /* Mode Selector */
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 560px) {
+      .modes { grid-template-columns: 1fr; }
+    }
+
+    .mode-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .mode-card:hover { border-color: #475569; }
+    .mode-card.active {
+      border-color: var(--accent);
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .mode-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .mode-card p {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .mode-card .check {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: transparent;
+    }
+
+    .mode-card.active .check {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      background: var(--card);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 40px 20px;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin-bottom: 24px;
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .upload-zone svg {
+      width: 48px;
+      height: 48px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .upload-zone h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .upload-zone p {
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    #fileInput { display: none; }
+
+    /* Options */
+    .options {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .options label:last-child { margin-bottom: 0; }
+
+    .options input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #0f172a;
+    }
+
+    .card-body {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-name {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #475569; }
+
+    .bulk-bar {
+      position: sticky;
+      bottom: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      z-index: 50;
+      margin-top: 20px;
+    }
+
+    .status {
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .status.show { display: block; }
+    .status.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+    }
+    .status.info {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🛡️ Metadata Changer Pro</h1>
+      <p>Deep clean • Kill C2PA & AI signatures • Make images look normal</p>
+      <div class="badge">🔒 100% Private — Everything runs in your browser</div>
+    </header>
+
+    <!-- Mode Selection -->
+    <div class="modes">
+      <div class="mode-card active" data-mode="inject" onclick="setMode('inject')">
+        <div class="check">✓</div>
+        <h3>Clean + Unique Metadata</h3>
+        <p>Strip everything then inject realistic camera data so it looks like a real photo</p>
+      </div>
+      <div class="mode-card" data-mode="pure" onclick="setMode('pure')">
+        <div class="check">✓</div>
+        <h3>Pure Clean (Zero Metadata)</h3>
+        <p>Completely strip all metadata and C2PA. No new data added.</p>
+      </div>
+    </div>
+
+    <!-- Extra Options -->
+    <div class="options">
+      <label>
+        <input type="checkbox" id="optQuality" checked />
+        High quality re-encode (95%)
+      </label>
+      <label>
+        <input type="checkbox" id="optUniqueEveryTime" checked />
+        Generate unique metadata on every download
+      </label>
+      <label>
+        <input type="checkbox" id="optKeepName" />
+        Keep original filename (add _cleaned)
+      </label>
+    </div>
+
+    <!-- Upload -->
+    <div class="upload-zone" id="dropZone">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+      </svg>
+      <h3>Drop images here</h3>
+      <p>or tap to browse • Supports JPG, PNG, WebP • Large batches OK</p>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg" multiple />
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <!-- Gallery -->
+    <div class="gallery" id="gallery"></div>
+
+    <!-- Bulk actions -->
+    <div class="bulk-bar hidden" id="bulkBar">
+      <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+      <button class="btn btn-primary" id="bulkBtn" onclick="downloadAll()">
+        📦 Download All Cleaned
+      </button>
+    </div>
+
+    <footer>
+      Metadata Changer Pro • Client-side only • No uploads to any server<br>
+      Domain ready for <strong>rewardnest.us</strong>
+    </footer>
+  </div>
+
+  <!-- piexifjs for writing EXIF in browser -->
+  <script src="https://cdn.jsdelivr.net/npm/piexifjs@1.0.6/piexif.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
