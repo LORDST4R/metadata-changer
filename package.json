@@ -1,0 +1,10 @@
+{
+  "name": "stardom",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Stardom — Uniquify photos & videos with before/after, ZIP batch, metadata history, multi-select.",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  }
+}
