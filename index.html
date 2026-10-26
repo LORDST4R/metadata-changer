@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Stardom — Uniquify Media</title>
+  <meta name="description" content="Stardom: Uniquify your photos and videos. Strip tracking data, kill C2PA & AI signatures, inject unique realistic metadata." />
+  <meta name="theme-color" content="#09090b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar / Top nav -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">✦</div>
+        <div>
+          <div class="brand-name">Stardom</div>
+          <div class="brand-tag">Uniquify Media</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="library" onclick="switchView('library')">
+          <span class="nav-icon">◈</span> Media Library
+        </button>
+        <button class="nav-item" data-view="uniquify" onclick="switchView('uniquify')">
+          <span class="nav-icon">⚡</span> Uniquify
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="privacy-badge">🔒 100% Private</div>
+        <div class="privacy-text">Everything stays on your device</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- LIBRARY VIEW -->
+      <section id="view-library" class="view active">
+        <header class="view-header">
+          <div>
+            <h1>Media Library</h1>
+            <p class="subtitle">Your photos & videos, organized by day</p>
+          </div>
+          <button class="btn btn-primary" onclick="switchView('uniquify')">
+            + Add & Uniquify
+          </button>
+        </header>
+
+        <!-- Filters -->
+        <div class="filters">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-type="all" onclick="setTypeFilter('all')">All</button>
+            <button class="filter-tab" data-type="photo" onclick="setTypeFilter('photo')">Photos</button>
+            <button class="filter-tab" data-type="video" onclick="setTypeFilter('video')">Videos</button>
+          </div>
+          <div class="day-filter">
+            <select id="dayFilter" onchange="applyFilters()">
+              <option value="all">All days</option>
+              <option value="today">Today</option>
+              <option value="yesterday">Yesterday</option>
+              <option value="7">Last 7 days</option>
+              <option value="30">Last 30 days</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="libraryEmpty" class="empty-state">
+          <div class="empty-icon">◈</div>
+          <h3>Your library is empty</h3>
+          <p>Uniquify some media and it will appear here, filtered by day.</p>
+          <button class="btn btn-primary" onclick="switchView('uniquify')">Start Uniquifying</button>
+        </div>
+
+        <div id="libraryGrid" class="media-grid hidden"></div>
+      </section>
+
+      <!-- UNIQUIFY VIEW -->
+      <section id="view-uniquify" class="view">
+        <header class="view-header">
+          <div>
+            <h1>Uniquify</h1>
+            <p class="subtitle">Strip tracking data • Kill C2PA & AI signatures • Inject unique metadata</p>
+          </div>
+        </header>
+
+        <!-- Mode cards -->
+        <div class="mode-row">
+          <div class="mode-card active" data-mode="inject" onclick="setMode('inject')">
+            <div class="mode-check">✓</div>
+            <div class="mode-title">Uniquify + Realistic Metadata</div>
+            <div class="mode-desc">Remove everything, then inject unique camera-style metadata so it looks real</div>
+          </div>
+          <div class="mode-card" data-mode="pure" onclick="setMode('pure')">
+            <div class="mode-check">✓</div>
+            <div class="mode-title">Pure Uniquify</div>
+            <div class="mode-desc">Completely strip all metadata & signatures. Zero data left.</div>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-bar">
+          <label class="opt">
+            <input type="checkbox" id="optQuality" checked />
+            High quality
+          </label>
+          <label class="opt">
+            <input type="checkbox" id="optUnique" checked />
+            Unique every time
+          </label>
+          <label class="opt">
+            <input type="checkbox" id="optKeepName" />
+            Keep filename
+          </label>
+        </div>
+
+        <!-- Drop zone -->
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-inner">
+            <div class="drop-icon">↑</div>
+            <h3>Drop photos or videos</h3>
+            <p>or tap to browse • Large batches supported</p>
+            <div class="drop-formats">JPG · PNG · WebP · MP4 · MOV</div>
+          </div>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg,video/mp4,video/quicktime,video/webm" multiple hidden />
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <!-- Current session queue -->
+        <div id="queueSection" class="queue-section hidden">
+          <div class="queue-header">
+            <h2>Ready to Uniquify <span id="queueCount">0</span></h2>
+            <div class="queue-actions">
+              <button class="btn btn-ghost" onclick="clearQueue()">Clear</button>
+              <button class="btn btn-primary" id="uniquifyAllBtn" onclick="uniquifyAll()">
+                ⚡ Uniquify All
+              </button>
+            </div>
+          </div>
+          <div id="queueGrid" class="media-grid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/piexifjs@1.0.6/piexif.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

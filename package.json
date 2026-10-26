@@ -1,0 +1,10 @@
+{
+  "name": "stardom",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Stardom — Uniquify photos & videos. Strip tracking data, kill C2PA, inject unique metadata.",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  }
+}
